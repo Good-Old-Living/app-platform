@@ -1,0 +1,21 @@
+include ':common:Common-System'
+include ':infra:Infra-Transaction'
+include ':infra:Infra-Comm'
+include ':infra:Infra-Diagnostics'
+include ':infra:Infra-MessagingService'
+include ':infra:Infra-Persistence'
+include ':infra:Infra-Scheduler'
+include ':infra:Infra-Template'
+include ':repository:Repository-Metadata'
+include ':data:Data-JSON'
+include ':document:Document-PDF'
+include ':app:App-Core'
+include ':app:App-Session'
+include ':app:App-Engine'
+include ':app:App-Binding-Http'
+include ':app:App-Server'
+
+include ':ui:UI-Faces'
+
+//include ':application:module:ApplicationModule-Core'
+//project(':application:module:ApplicationModule-Core').projectDir = new File(settingsDir, '../application/module/ApplicationModule-Core')

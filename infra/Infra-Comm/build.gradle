@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+dependencies {
+  compile files(project.property("j2ee_lib")+'/jta-1.1.jar')
+}
+
+jar {
+    baseName = 'pampan-infra-transaction'
+    version =  '0.1'
+}

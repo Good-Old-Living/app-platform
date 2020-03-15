@@ -1,0 +1,158 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext.j2ee_lib = '/scratch/java/jdk1.8.0_101/jre/j2ee-lib'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    group = 'core.platform'
+    version = '1.0'
+    
+    repositories {
+          mavenCentral()
+    }
+    
+    dependencies {
+      compile files(project.property("j2ee_lib")+'/comm.jar')
+      compile files(project.property("j2ee_lib")+'/javax.persistence-2.1.0.jar')
+      compile files(project.property("j2ee_lib")+'/jta-1.1.jar')
+      compile files(project.property("j2ee_lib")+'/mail.jar')
+      compile files(project.property("j2ee_lib")+'/servlet-api.jar')
+      testCompile 'junit:junit:4.12'
+      
+    }
+}
+
+def alljar = task("alljar", type: Jar) {
+  baseName = "app-platform"
+  dependsOn "build"
+}
+  subprojects {
+  //you can filter and only apply the configuration to the specific projects
+  project.plugins.withId("java") {
+       alljar.from sourceSets.main.output.asFileTree.matching {
+         include '**/*.class'
+    }
+  }
+}
+
+project(':infra:Infra-Comm') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    }
+}
+
+project(':infra:Infra-Diagnostics') {
+    dependencies {
+        compile project(':common:Common-System')
+    }
+}
+
+project(':infra:Infra-MessagingService') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile 'org.apache.httpcomponents:httpclient:4.3.5'
+    }
+}
+
+project(':infra:Infra-Persistence') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile project(':infra:Infra-Transaction')
+    }
+}
+
+project(':infra:Infra-Scheduler') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile 'org.quartz-scheduler:quartz:2.2.1'
+    }
+}
+
+project(':infra:Infra-Template') {
+    dependencies {
+        compile project(':common:Common-System')
+        
+    }
+}
+
+project(':repository:Repository-Metadata') {
+    dependencies {
+        compile project(':common:Common-System')
+    }
+}
+
+project(':data:Data-JSON') {
+    dependencies {
+        compile project(':common:Common-System')
+    }
+}
+
+project(':document:Document-PDF') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile 'org.apache.pdfbox:pdfbox:1.8.7'
+    }
+}
+
+project(':app:App-Core') {
+    dependencies {
+        compile project(':common:Common-System')
+    }
+}
+
+project(':app:App-Session') {
+    dependencies {
+        compile project(':app:App-Core')
+    }
+}
+
+project(':app:App-Engine') {
+    dependencies {
+        compile project(':app:App-Core')
+        compile project(':infra:Infra-Persistence')
+        compile project(':infra:Infra-Comm')
+    }
+}
+
+project(':app:App-Binding-Http') {
+    dependencies {
+        
+        compile project(':app:App-Core')
+        compile project(':app:App-Engine')
+        compile project(':app:App-Session')
+        compile project(':data:Data-JSON') 
+        compile project(':ui:UI-Faces')
+    }
+}
+
+
+project(':app:App-Server') {
+    dependencies {
+        compile project(':app:App-Core')
+        compile project(':app:App-Engine')
+        compile project(':app:App-Binding-Http')
+        compile project(':infra:Infra-Template')
+        compile project(':infra:Infra-MessagingService')
+        compile project(':repository:Repository-Metadata')
+    }
+}
+
+project(':ui:UI-Faces') {
+    dependencies {
+        compile project(':common:Common-System')
+        compile project(':data:Data-JSON') 
+        compile project(':app:App-Core')
+        compile project(':infra:Infra-Persistence')
+        compile project(':infra:Infra-Diagnostics')
+    }
+}
