@@ -84,6 +84,7 @@ public class XHtmlServlet extends AppServlet {
              htmlView);
       appRequest.getResponse().getWriter().write(strWriter.toString());
     } catch (Exception e) {
+      e.printStackTrace();
       strWriter = new StringWriter();
       render(appRequest,
              strWriter,
