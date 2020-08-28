@@ -118,6 +118,10 @@ public abstract class EntityQuery<T> {
     if (attrName.equals("orderBy")) {
       mOrderBy = value;
     }
+    else if (attrName.equals("customOrderBy")) {
+      //ignore. Sorting will be doen by app
+      mQueryMap.put("customOrderBy", value);
+    }
     else if (attrName.equals("isDesc")) {
       mIsDesc = "true".equals(value);
     }
