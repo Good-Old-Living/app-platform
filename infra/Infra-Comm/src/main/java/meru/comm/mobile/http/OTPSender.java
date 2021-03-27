@@ -9,47 +9,25 @@ import java.text.MessageFormat;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class HttpSMSSender {
+public class OTPSender {
 
-  private static String REQUEST_URL = "https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?"
-      + "APIKEY=hDuiVf92kbx&SenderID=PAARIL&ServiceName=TEMPLATE_BASED" + "&MobileNo={0}&Message={1}";
+  private static String REQUEST_URL = "https://2factor.in/API/V1/768a35d8-557e-11eb-8153-0200cd936042/SMS/{0}/{1}\n";
 
-  
-  private static String DLT_REQUEST_URL = "https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?"
-      + "APIKEY=hDuiVf92kbx&SenderID=KIRUTH&ServiceName=TEMPLATE_BASED&DLTTemplateID={0}&MobileNo={1}&Message={2}";
-
-  
-  private String requestURL;
   private MessageFormat urlFormat;
-  private MessageFormat urlFormatDLT;
 
-  public HttpSMSSender(String requestURL) {
-    this.requestURL = requestURL;
+  public OTPSender() {
     urlFormat = new MessageFormat(REQUEST_URL);
-    
-    urlFormatDLT = new MessageFormat(DLT_REQUEST_URL);
   }
 
   public void send(String number, String message) {
-    send(null, number, message);
-  }
-  
-  public void send(String templateId, String number, String message) {
 
     HttpsURLConnection httpsCon = null;
 
     try {
 
       message = URLEncoder.encode(message, "UTF-8");
-      
-      String url = null;
-      if (templateId == null) {
-        url = urlFormat.format(new Object[] { number, message });
-      }
-      else {
-        url = urlFormatDLT.format(new Object[] { templateId, number, message });
-      }
-      System.out.println(">>>> URL "+url);
+      String url = urlFormat.format(new Object[] { number, message });
+
       httpsCon = (HttpsURLConnection) new URL(url).openConnection();
       httpsCon.setRequestMethod("GET");
       httpsCon.setConnectTimeout(10000);
@@ -82,8 +60,8 @@ public class HttpSMSSender {
   }
 
   public static void main(String[] args) {
-  //  HttpSMSSender smsSender = new HttpSMSSender(REQUEST_URL);
-  //  smsSender.send("919845919393", "Your OTP is 123");
+    OTPSender smsSender = new OTPSender();
+    smsSender.send("919845919393", "Your OTP is 123");
 
   }
 
